@@ -3,11 +3,9 @@ using Statistics
 using Test
 using CUDAdrv, CuArrays, CUDAnative
 
-push!(LOAD_PATH, ".")
-
 using CuDiff
 
-function deriv_num(f, x::T) where T<:Number
+function derivative_num(f, x::T) where T<:Number
     u = f(x)
     eps = T(1e-3)
     du = (f(x+eps) - f(x-eps)) / (2*eps)
@@ -17,8 +15,8 @@ end
 
 function kernel(f, d_x, d_a, d_da, d_b, d_db)
     i = (blockIdx().x-1) * blockDim().x + threadIdx().x
-    d_a[i], d_da[i] = deriv(f, d_x[i])
-    d_b[i], d_db[i] = deriv_num(f, d_x[i])
+    d_a[i], d_da[i] = derivative(f, d_x[i])
+    d_b[i], d_db[i] = derivative_num(f, d_x[i])
     return nothing
 end
 

@@ -184,11 +184,11 @@ CUDAnative.signbit(x::Dual) = CUDAnative.signbit(x.u)
 
 #############################################################################
 
-function deriv(f, x, p...)
+function derivative(f, x, p...)
     dual = f(Dual(x, one(x)), p...)
     return dual.u, dual.du
 end
 
-export deriv
+export derivative
 
 end # module
