@@ -8,7 +8,7 @@ using CuDiff
 function derivative_num(f, x::T) where T<:Number
     u = f(x)
     eps = T(1e-3)
-    du = (evaluate_gpu(f, x+eps) - evaluate_gpu(f, x-eps)) / (2*eps)
+    du = (derivative(f, x+eps)[1] - derivative(f, x-eps)[1]) / (2*eps)
     return u, du
 end
 
@@ -17,7 +17,7 @@ function kernel(f, d_x, d_a, d_da, d_b, d_db)
     i = (blockIdx().x-1) * blockDim().x + threadIdx().x
     d_a[i], d_da[i] = derivative(f, d_x[i])
     d_b[i], d_db[i] = derivative_num(f, d_x[i])
-    # d_b[i], d_db[i] = d_a[i], d_da[i]
+    #d_b[i], d_db[i] = d_a[i], d_da[i]
     return nothing
 end
 
