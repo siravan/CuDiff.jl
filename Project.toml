@@ -1,7 +1,7 @@
 name = "CuDiff"
 uuid = "81ef7840-589c-11e9-1444-f983ab686d67"
 authors = ["Shahriar Iravanian <siravan@emory.edu>"]
-version = "0.1.0"
+version = "0.2.0"
 
 [deps]
 CUDAnative = "be33ccc6-a3ff-5ff2-a52e-74243cff1e17"
