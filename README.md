@@ -1,6 +1,6 @@
 # CuDiff.jl
 
-**CuDiff** adds forward auto-differentiation capability using [dual numbers](https://en.wikipedia.org/wiki/Dual_number) to GPU kernels and is a bridge between [JuliaGPU](https://github.com/juliagpu) and [JuliaDiff](https://github.com/juliadiff) ecosystems.
+**CuDiff** adds forward auto-differentiation capability using [dual numbers](https://en.wikipedia.org/wiki/Dual_number) to GPU kernels and is a bridge between the [JuliaGPU](https://github.com/juliagpu) and [JuliaDiff](https://github.com/juliadiff) ecosystems.
 
 [Automatic Differentiation](https://en.wikipedia.org/wiki/Automatic_differentiation) has many applications in numerical computation, including solving ordinary differential equations, optimization, and machine learning. **JuliaDiff** is a powerful set of routines for auto-differentiation, including those that calculate gradients, jacobians and hessians, but unfortunately does not work with **JuliaGPU**.
 
@@ -82,6 +82,12 @@ plt.plot(x, y)
 plt.plot(x, dy)
 ```
 
-As expected, the result is
+As expected, the result - which also exhibits Gibb's phenomenon - is
 
 ![](examples/deriv.png)
+
+*derivate* accepts more than two arguments. These additional arguments are passed unchanged. If a function has more than one parameter, say *f(x, y, z)*, we can  differentiate with respect to a *y* or *z* by using an anonymous function. For example, the follow code allows us to differentiate *f* with respect to *y*:
+
+```julia
+df_dy = derivate((y,x,z)->f(x,y,z), y, x, z)
+```

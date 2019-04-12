@@ -8,7 +8,7 @@ using CuDiff
 function derivative_num(f, x::T) where T<:Number
     u = f(x)
     eps = T(1e-3)
-    du = (f(x+eps) - f(x-eps)) / (2*eps)
+    du = (evaluate_gpu(f, x+eps) - evaluate_gpu(f, x-eps)) / (2*eps)
     return u, du
 end
 
@@ -17,6 +17,7 @@ function kernel(f, d_x, d_a, d_da, d_b, d_db)
     i = (blockIdx().x-1) * blockDim().x + threadIdx().x
     d_a[i], d_da[i] = derivative(f, d_x[i])
     d_b[i], d_db[i] = derivative_num(f, d_x[i])
+    # d_b[i], d_db[i] = d_a[i], d_da[i]
     return nothing
 end
 
@@ -66,7 +67,7 @@ function test_all()
         copy!(db, d_db)
         err1 = quantile!(abs.(a .- b), 0.99)
         err2 = quantile!(abs.(da .- db), 0.99)
-        passed =  err1 < 1e-5 && err2 < 1e-3
+        passed =  err1 < 1e-5 && err2 < 1e-2
         #Printf.@printf "%.6f\t%.6f\n" err1 err2
         if !passed
             Printf.@printf "%.6f\t%.6f\n" err1 err2
@@ -74,7 +75,9 @@ function test_all()
         return passed
     end
 
+    @printf "+:\t%s\n" @test run(x -> x + 2.0)
     @printf "rationals:\t%s\n" @test run(x -> (2*x-0.65f0)/(4.3-3*x))
+    @printf "poly:\t%s\n" @test run(x -> CUDAnative.exp(0.04*(x+85)))
     @printf "sin:\t%s\n" @test run(x -> CUDAnative.sin(x))
     @printf "sinpi:\t%s\n" @test run(x -> CUDAnative.sinpi(x))
     # @printf "sin_fast:\t%s\n" @test run(x -> CUDAnative.sin_fast(x))
@@ -123,6 +126,7 @@ function test_all()
     @printf ">=:\t%s\n" @test run(x -> x >= 0.5 ? CUDAnative.sin(x) : CUDAnative.cos(x))
     @printf "==:\t%s\n" @test run(x -> x == 0.5 ? CUDAnative.sin(x) : CUDAnative.cos(x))
     @printf "!=:\t%s\n" @test run(x -> x != 0.5 ? CUDAnative.sin(x) : CUDAnative.cos(x))
+    @printf "isapprox:\t%s\n" @test run(x -> isapprox(x, 0.5) ? CUDAnative.sin(x) : CUDAnative.cos(x))
 end
 
 test_all()
