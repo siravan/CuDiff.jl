@@ -2,7 +2,7 @@ name = "CuDiff"
 uuid = "81ef7840-589c-11e9-1444-f983ab686d67"
 authors = ["Shahriar Iravanian <siravan@emory.edu>"]
 <<<<<<< HEAD
-version = "0.2.2"
+version = "0.3.0"
 =======
 version = "0.1.1"
 >>>>>>> b0f43f77551523817273153f10332c73986e330d
