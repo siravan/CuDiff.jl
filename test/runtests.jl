@@ -12,7 +12,6 @@ function derivative_num(f, x::T) where T<:Number
     return u, du
 end
 
-
 function kernel(f, d_x, d_a, d_da, d_b, d_db)
     i = (blockIdx().x-1) * blockDim().x + threadIdx().x
     d_a[i], d_da[i] = derivative(f, d_x[i])

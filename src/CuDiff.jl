@@ -6,23 +6,17 @@ inverse(x) = one(x) / x
 
 include("./dual.jl")
 # include("./single.jl")
-# include("./scalar.jl")
 
 function derivative(f, x, p...)
     dual = f(Dual(x, one(x)), p...)
     return dual.u, dual.du
 end
 
-# function evaluate_gpu(f, x, p...)
-#     single = f(Single(x), p...)
-#     return single.u
-# end
-#
-# function evaluate_cpu(f, x, p...)
-#     scalar = f(Scalar(x), p...)
-#     return scalar.u
-# end
+function evaluate(f, x, p...)
+    res = f(Single(x), p...)
+    return map(x -> isa(Dual) ? x.u : x, res)
+end
 
-export derivative
+export derivative, evaluate
 
 end # module

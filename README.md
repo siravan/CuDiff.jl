@@ -8,7 +8,7 @@
 
 # Usage
 
-**CuDiff** exports only one function: *derivative(f,x,...)* and works similar to *ForwardDiff.derivative*. Here, *f* is a GPU compatible function with one or more inputs. *derivative* returns a tuple *f(x,...), f'(x,...)*, where the differentiation is with respect to *x*, i.e., the first argument of *f*.  
+**CuDiff** exports two function: *derivative(f,x,...)* that works similar to *ForwardDiff.derivative* and *evaluate(f,x,...)* that simply evaluate *f* using the same accuracy and rounding-error as *derivative*. Here, *f* is a GPU compatible function with one or more inputs and out scalar output. *derivative* returns a tuple *(f(x,...), f'(x,...))*, where the differentiation is with respect to *x*, i.e., the first argument of *f*.  
 
 Let's look at an example. We define a GPU function that calculates a triangular waveform using the Fourier series:
 
